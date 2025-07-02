@@ -1,0 +1,4 @@
+SG90 3d printed 9g servo gripper by scaredoatmeal on Thingiverse: https://www.thingiverse.com/thing:4972826
+
+Summary:
+Changes made here mainly were to fit the SG90 servo. I'm not sure which servo was used to make these measurements, but none of the pieces lined up for me without forcing them.-Made size adjustments to the gear size for SG90 and made a nice tight grove for the servo to slide into. -Small pre-screwed holes size and position increased (Prior, my 3d printer was not seeing the small hole it needed to make).-The two-piece claw set made was modified into one piece and longer to grab a more significant range for larger objects.-Added a base to the main frame that secures the servo in place so that you can place the claw evenly on a flat service. 
