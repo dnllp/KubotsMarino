@@ -1,5 +1,5 @@
-const char* ssid = "AUTOMATA";
-const char* password = "AUTOMATA";
+const char* ssid = "Explorador";
+const char* password = "mante2025";
 
 #include "esp_wifi.h"
 #include "esp_camera.h"
@@ -118,9 +118,9 @@ void setup(){
   startCameraServer();
 
   for (int i = 0; i < 5; i++) {
-    ledcWrite(7, 10); // flash led
+    ledcWrite(4, 10); // flash led
     delay(50);
-    ledcWrite(7, 0);
+    ledcWrite(4, 0);
     delay(50);
   }
 }

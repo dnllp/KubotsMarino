@@ -232,7 +232,7 @@ static esp_err_t cmd_handler(httpd_req_t *req)
     //Don't use channel 1 and channel 2
     else if(!strcmp(variable, "flash")) 
     {
-      ledcWrite(7,val);
+      ledcWrite(4,val);
     }  
     else if(!strcmp(variable, "speed")) 
     {
@@ -254,25 +254,25 @@ static esp_err_t cmd_handler(httpd_req_t *req)
       if (val==1) {
         Serial.println("Forward");
         actstate = fwd;     
-        ledcWrite(4,speed);  // pin 12
-        ledcWrite(3,0);      // pin 13
-        ledcWrite(5,speed);  // pin 14  
-        ledcWrite(6,0);      // pin 15   
+        ledcWrite(14,speed);  // pin 12
+        ledcWrite(15,0);      // pin 13
+        ledcWrite(13,speed);  // pin 14  
+        ledcWrite(12,0);      // pin 15   
         delay(200);
       }
       else if (val==2) {   
         Serial.println("TurnLeft");
-        ledcWrite(3,0);
-        ledcWrite(5,0); 
+        ledcWrite(14,speed);
+        ledcWrite(15,0); 
         //if      (actstate == fwd) { ledcWrite(4,speed); ledcWrite(6,    0); }
         //else if (actstate == rev) { ledcWrite(4,    0); ledcWrite(6,speed); }
         //else                      { ledcWrite(4,speed); ledcWrite(6,speed); }
-        ledcWrite(4,speed); 
-        ledcWrite(6,speed);
+        ledcWrite(13,0); 
+        ledcWrite(12,speed);
               
         delay(100);  
-        ledcWrite(4,0);
-        ledcWrite(6,0);
+        ledcWrite(14,0);
+        ledcWrite(12,0);
       }
       else if (val==3) {
         Serial.println("Stop"); 
@@ -284,35 +284,35 @@ static esp_err_t cmd_handler(httpd_req_t *req)
       }
       else if (val==4) {
         Serial.println("TurnRight");
-        ledcWrite(4,0);
-        ledcWrite(6,0); 
+        ledcWrite(14,0);
+        ledcWrite(15,speed); 
         //if      (actstate == fwd) { ledcWrite(3,    0); ledcWrite(5,speed); }
         //else if (actstate == rev) { ledcWrite(3,speed); ledcWrite(5,    0); }
         //else                      { ledcWrite(3,speed); ledcWrite(5,speed); }
-        ledcWrite(3,speed); 
-        ledcWrite(5,speed);
+        ledcWrite(13,speed); 
+        ledcWrite(12,0);
               
         delay(100);
 
-        ledcWrite(3, 0);
-        ledcWrite(5, 0);
+        ledcWrite(13, 0);
+        ledcWrite(15, 0);
         
       }
       else if (val==5) {
         Serial.println("Backward");  
         actstate = rev;      
-        ledcWrite(4,0);
-        ledcWrite(3,speed);
-        ledcWrite(5,0);  
-        ledcWrite(6,speed); 
+        ledcWrite(14,0);
+        ledcWrite(15,speed);
+        ledcWrite(13,0);  
+        ledcWrite(12,speed); 
         delay(200);              
       }
       if (noStop!=1) 
       {
-        ledcWrite(3, 0);
-        ledcWrite(4, 0);  
-        ledcWrite(5, 0);  
-        ledcWrite(6, 0);
+        ledcWrite(14, 0);
+        ledcWrite(15, 0);  
+        ledcWrite(13, 0);  
+        ledcWrite(12, 0);
       }         
     }        
     else 
@@ -349,7 +349,7 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>AUTOMATA ESP32CAM ROBOT</title>
+        <title>Kubot Marino - Explorador</title>
         <style>
             *{
                 padding: 0; margin: 0;
@@ -410,10 +410,8 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
     <body>
          
         <canvas id="canvas" width="200" height="90"></canvas>
-        <h1 class="tITULO">AUTOMATA</h1>
-        <a href="https://www.youtube.com/channel/UCKD9PvMAW0nYi681AZbSZSQ/videos" class="LINK">YOUTUBE</a>   
-
-
+        <h1 class="tITULO">Kubot Explorador</h1>
+        
         <div class="close" id="close-stream" style="margin: auto">close</div>     
         <img id="stream" src="" class="cont_stream">
 
@@ -425,17 +423,17 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
         <div class="cont_flex"><div><input type="checkbox" style="margin-right: 5px;" id="nostop" onclick="var noStop=0;if (this.checked) noStop=1;fetch(document.location.origin+'/control?var=nostop&val='+noStop);">No Stop</div></div>
 
         <div class="cont_flex">     
-            <button type="button" id="forward" onclick="fetch(document.location.origin+'/control?var=car&val=1');">Forward</button>
+            <button type="button" id="forward" onclick="fetch(document.location.origin+'/control?var=car&val=1');">Avanzar</button>
         </div>
 
         <div class="cont_flex">     
-            <button type="button" id="turnleft" onclick="fetch(document.location.origin+'/control?var=car&val=4');">TurnLeft</button>
-            <button type="button" id="stop" onclick="fetch(document.location.origin+'/control?var=car&val=3');">Stop</button>
-            <button type="button" id="turnright" onclick="fetch(document.location.origin+'/control?var=car&val=2');">TurnRight</button>  
+            <button type="button" id="turnleft" onclick="fetch(document.location.origin+'/control?var=car&val=4');">Izquierda</button>
+            <button type="button" id="stop" onclick="fetch(document.location.origin+'/control?var=car&val=3');">Detener</button>
+            <button type="button" id="turnright" onclick="fetch(document.location.origin+'/control?var=car&val=2');">Derecha</button>  
         </div>
 
         <div class="cont_flex">     
-            <button type="button" id="backward" onclick="fetch(document.location.origin+'/control?var=car&val=5');">Backward</button>
+            <button type="button" id="backward" onclick="fetch(document.location.origin+'/control?var=car&val=5');">Retroceder</button>
         </div>
 
         <div class="cont_flex">  
