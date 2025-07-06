@@ -14,8 +14,8 @@
 // Define el pin para el servo
 #define SERVO_PIN   13 // ¡Pin para el microservo SG90!
 
-const char* ssid = "Dragon_23";   // Cambiar por el nombre de sus robots ej Messi, Mbappe, etc. 
-const char* password = "mante2024"; // cambiar la clave para que solo los integrandes del equipo puedan accesar a sus robots.
+const char* ssid = "Dragon_09";   // Cambiar por el nombre de sus robots ej Messi, Mbappe, etc. 
+const char* password = "mante2025"; // cambiar la clave para que solo los integrandes del equipo puedan accesar a sus robots.
 
 const int freq = 2000;
 const int resolution = 8;
@@ -127,6 +127,7 @@ static const char PROGMEM INDEX_HTML[] = R"(
   <body>
   <div class="control-section">
     <h2>Control Kubot Marino</h2>
+    <h2>Investigador</h2>
     <div class="buttons-grid">
       <button class="button up" ontouchstart="sendCmd('FORWARD');" ontouchend="sendCmd('STOP');" onmousedown="sendCmd('FORWARD');" onmouseup="sendCmd('STOP');">▲</button>
       <button class="button left" ontouchstart="sendCmd('TURN_LEFT');" ontouchend="sendCmd('STOP');" onmousedown="sendCmd('TURN_LEFT');" onmouseup="sendCmd('STOP');">◀</button>
