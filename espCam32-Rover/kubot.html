@@ -1,0 +1,106 @@
+¡Claro! Vamos a modificar el código HTML Canvas para dibujar un robot diferencial. Un robot diferencial típicamente tiene un cuerpo principal (a menudo rectangular o cuadrado) y dos ruedas motrices a los lados.
+
+Aquí te presento el código modificado. He cambiado el "torso" a un cuadrado y las "orejas" a ruedas, y he ajustado las coordenadas para que se vea como un robot simple con dos ruedas laterales.
+
+HTML
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Robot Diferencial</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        canvas {
+            border: 2px solid #333;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="250" height="200"></canvas>
+
+    <script>
+        window.onload = function(){
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext("2d");
+
+            // Coordenadas base para el robot (aproximadamente el centro del canvas)
+            var centerX = canvas.width / 2;
+            var centerY = canvas.height / 2;
+
+            // --- Cuerpo del robot (cuadrado) ---
+            var bodyWidth = 80;
+            var bodyHeight = 60;
+            var bodyX = centerX - (bodyWidth / 2);
+            var bodyY = centerY - (bodyHeight / 2) - 10; // Un poco más arriba para la cabeza
+
+            ctx.fillStyle = "rgb(100, 100, 255)"; // Azul para el cuerpo
+            ctx.fillRect(bodyX, bodyY, bodyWidth, bodyHeight);
+
+            // Detalles en el cuerpo (un rectángulo interior para simular una pantalla o panel)
+            ctx.fillStyle = "rgb(150, 150, 255)"; // Un azul más claro
+            ctx.fillRect(bodyX + 10, bodyY + 10, bodyWidth - 20, bodyHeight - 20);
+
+
+            // --- Ruedas (las "orejas" transformadas en ruedas) ---
+            var wheelRadius = 15;
+            var wheelOffsetFromBody = 5; // Separación del cuerpo
+
+            // Rueda Izquierda
+            var leftWheelX = bodyX - wheelRadius - wheelOffsetFromBody;
+            var leftWheelY = bodyY + (bodyHeight / 2);
+            ctx.fillStyle = "rgb(50, 50, 50)"; // Gris oscuro para las ruedas
+            ctx.beginPath();
+            ctx.arc(leftWheelX, leftWheelY, wheelRadius, 0, 2 * Math.PI, true);
+            ctx.fill();
+
+            // Rueda Derecha
+            var rightWheelX = bodyX + bodyWidth + wheelRadius + wheelOffsetFromBody;
+            var rightWheelY = bodyY + (bodyHeight / 2);
+            ctx.fillStyle = "rgb(50, 50, 50)"; // Gris oscuro para las ruedas
+            ctx.beginPath();
+            ctx.arc(rightWheelX, rightWheelY, wheelRadius, 0, 2 * Math.PI, true);
+            ctx.fill();
+
+            // --- Pequeña rueda loca/caster (opcional, para estabilidad) ---
+            var casterRadius = 8;
+            var casterX = centerX;
+            var casterY = bodyY + bodyHeight + casterRadius + 5; // Debajo del cuerpo
+            ctx.fillStyle = "rgb(150, 150, 150)"; // Gris claro para la rueda loca
+            ctx.beginPath();
+            ctx.arc(casterX, casterY, casterRadius, 0, 2 * Math.PI, true);
+            ctx.fill();
+
+
+            // --- Ojos (manteniendo la idea de los círculos) ---
+            var eyeRadius = 6;
+            ctx.fillStyle = "rgb(255,0,0)"; // Rojo para los ojos
+
+            // Ojo izquierdo
+            ctx.beginPath();
+            ctx.arc(bodyX + (bodyWidth * 0.3), bodyY + (bodyHeight * 0.3), eyeRadius, 0, 2 * Math.PI, true);
+            ctx.fill();
+
+            // Ojo derecho
+            ctx.beginPath();
+            ctx.arc(bodyX + (bodyWidth * 0.7), bodyY + (bodyHeight * 0.3), eyeRadius, 0, 2 * Math.PI, true);
+            ctx.fill();
+
+            // --- Antena (la "cabeza" anterior, ahora como antena simple) ---
+            ctx.fillStyle = "rgb(200, 200, 200)"; // Gris claro para la antena
+            ctx.fillRect(centerX - 2.5, bodyY - 20, 5, 20); // Base de la antena
+            ctx.beginPath();
+            ctx.arc(centerX, bodyY - 20, 5, 0, 2 * Math.PI, true); // Punta de la antena
+            ctx.fill();
+
+        };
+    </script>
+</body>
+</html>

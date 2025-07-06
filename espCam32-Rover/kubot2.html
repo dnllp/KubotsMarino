@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Robot Diferencial (Vista Frontal)</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        canvas {
+            border: 2px solid #333;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="250" height="200"></canvas>
+
+    <script>
+        window.onload = function(){
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext("2d");
+
+            // Coordenadas base para el robot (aproximadamente el centro del canvas)
+            var centerX = canvas.width / 2;
+            var centerY = canvas.height / 2;
+
+            // --- Cuerpo del robot (cuadrado) ---
+            var bodyWidth = 80;
+            var bodyHeight = 80;
+            var bodyX = centerX - (bodyWidth / 2);
+            var bodyY = centerY - (bodyHeight / 2) - 10; // Un poco más arriba para la cabeza
+
+            ctx.fillStyle = "rgb(255, 102, 0)"; // Azul para el cuerpo
+            ctx.fillRect(bodyX, bodyY, bodyWidth, bodyHeight);
+
+            // Detalles en el cuerpo (un rectángulo interior para simular una pantalla o panel)
+            ctx.fillStyle = "rgb(255, 164, 32)"; // Un azul más claro
+            ctx.fillRect(bodyX + 10, bodyY + 10, bodyWidth - 20, bodyHeight - 20);
+
+            // --- Ruedas (rectangulares y pegadas a los laterales) ---
+            var wheelWidth = 10;
+            var wheelHeight = 40;
+
+            // Rueda Izquierda
+            var leftWheelX = bodyX - wheelWidth; // Pegada al lateral izquierdo del cuerpo
+            var leftWheelY = bodyY + (bodyHeight / 2) - (wheelHeight / 2);
+            ctx.fillStyle = "rgb(50, 50, 50)"; // Gris oscuro para las ruedas
+            ctx.fillRect(leftWheelX, leftWheelY+30, wheelWidth, wheelHeight);
+
+            // Rueda Derecha
+            var rightWheelX = bodyX + bodyWidth; // Pegada al lateral derecho del cuerpo
+            var rightWheelY = bodyY + (bodyHeight / 2) - (wheelHeight / 2);
+            ctx.fillStyle = "rgb(50, 50, 50)"; // Gris oscuro para las ruedas
+            ctx.fillRect(rightWheelX, rightWheelY+30, wheelWidth, wheelHeight);
+
+            // --- Ojos ---
+            var eyeRadius = 6;
+            ctx.fillStyle = "rgb(255,0,0)"; // Rojo para los ojos
+
+            // Ojo izquierdo
+            ctx.beginPath();
+            ctx.arc(bodyX + (bodyWidth * 0.3), bodyY + (bodyHeight * 0.3), eyeRadius, 0, 2 * Math.PI, true);
+            ctx.fill();
+
+            // Ojo derecho
+            ctx.beginPath();
+            ctx.arc(bodyX + (bodyWidth * 0.7), bodyY + (bodyHeight * 0.3), eyeRadius, 0, 2 * Math.PI, true);
+            ctx.fill();
+
+            // --- Sonrisa (una línea simple) ---
+            ctx.strokeStyle = "rgb(0, 0, 0)"; // Negro para la sonrisa
+            ctx.lineWidth = 2; // Grosor de la línea
+            ctx.beginPath();
+            ctx.arc(centerX, bodyY + (bodyHeight * 0.5), 20, 0, Math.PI, false); // Arco para la sonrisa
+            ctx.stroke();
+
+            // --- Antena (se mantiene como antes) ---
+            ctx.fillStyle = "rgb(200, 200, 200)"; // Gris claro para la antena
+            ctx.fillRect(centerX - 2.5, bodyY - 20, 5, 20); // Base de la antena
+            ctx.beginPath();
+            ctx.arc(centerX, bodyY - 20, 5, 0, 2 * Math.PI, true); // Punta de la antena
+            ctx.fill();
+        };
+    </script>
+</body>
+</html>

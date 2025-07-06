@@ -221,12 +221,14 @@ static esp_err_t cmd_handler(httpd_req_t *req)
     if(!strcmp(variable, "framesize")) 
     {
         Serial.println("framesize");
-        if(s->pixformat == PIXFORMAT_JPEG) res = s->set_framesize(s, (framesize_t)val);
+        //if(s->pixformat == PIXFORMAT_JPEG) res = s->set_framesize(s, (framesize_t)val);
+        if(s->pixformat == PIXFORMAT_JPEG) res = s->set_framesize(s, (framesize_t)3);
     }
     else if(!strcmp(variable, "quality")) 
     {
       Serial.println("quality");
-      res = s->set_quality(s, val);
+      //res = s->set_quality(s, val);
+      res = s->set_quality(s, 10);
     }
     //Remote Control Car 
     //Don't use channel 1 and channel 2
@@ -262,13 +264,10 @@ static esp_err_t cmd_handler(httpd_req_t *req)
       }
       else if (val==2) {   
         Serial.println("TurnLeft");
-        ledcWrite(14,speed);
+        ledcWrite(14,speed*0.25);
         ledcWrite(15,0); 
-        //if      (actstate == fwd) { ledcWrite(4,speed); ledcWrite(6,    0); }
-        //else if (actstate == rev) { ledcWrite(4,    0); ledcWrite(6,speed); }
-        //else                      { ledcWrite(4,speed); ledcWrite(6,speed); }
         ledcWrite(13,0); 
-        ledcWrite(12,speed);
+        ledcWrite(12,speed*0.25);
               
         delay(100);  
         ledcWrite(14,0);
@@ -277,21 +276,17 @@ static esp_err_t cmd_handler(httpd_req_t *req)
       else if (val==3) {
         Serial.println("Stop"); 
         actstate = stp;       
-        ledcWrite(4,0);
-        ledcWrite(3,0);
-        ledcWrite(5,0);     
-        ledcWrite(6,0);  
+        ledcWrite(14,0);
+        ledcWrite(13,0);
+        ledcWrite(15,0);     
+        ledcWrite(12,0);  
       }
       else if (val==4) {
         Serial.println("TurnRight");
         ledcWrite(14,0);
-        ledcWrite(15,speed); 
-        //if      (actstate == fwd) { ledcWrite(3,    0); ledcWrite(5,speed); }
-        //else if (actstate == rev) { ledcWrite(3,speed); ledcWrite(5,    0); }
-        //else                      { ledcWrite(3,speed); ledcWrite(5,speed); }
-        ledcWrite(13,speed); 
+        ledcWrite(15,speed*0.25); 
+        ledcWrite(13,speed*0.25); 
         ledcWrite(12,0);
-              
         delay(100);
 
         ledcWrite(13, 0);
@@ -360,7 +355,7 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
         display: block;
 
         }
-        .tITULO{
+        .TITULO{
             text-align: center;
             color: rgb(97, 97, 97);
             
@@ -410,18 +405,18 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
     <body>
          
         <canvas id="canvas" width="200" height="90"></canvas>
-        <h1 class="tITULO">Kubot Explorador</h1>
+        <h1 class="TITULO">Kubot Explorador</h1>
         
-        <div class="close" id="close-stream" style="margin: auto">close</div>     
+        <div class="close" id="close-stream" style="margin: auto">Cerrar Camara</div>     
         <img id="stream" src="" class="cont_stream">
 
         <div class="cont_flex">     
-            <button type="button" id="get-still">Get still</button>
-            <button type="button" id="toggle-stream">Start Stream</button>
+            <button type="button" id="get-still">Detener Camara</button>
+            <button type="button" id="toggle-stream">Iniciar Camara</button>
         </div>
-
+<!--
         <div class="cont_flex"><div><input type="checkbox" style="margin-right: 5px;" id="nostop" onclick="var noStop=0;if (this.checked) noStop=1;fetch(document.location.origin+'/control?var=nostop&val='+noStop);">No Stop</div></div>
-
+-->
         <div class="cont_flex">     
             <button type="button" id="forward" onclick="fetch(document.location.origin+'/control?var=car&val=1');">Avanzar</button>
         </div>
@@ -436,48 +431,90 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
             <button type="button" id="backward" onclick="fetch(document.location.origin+'/control?var=car&val=5');">Retroceder</button>
         </div>
 
+        
         <div class="cont_flex">  
+            <div style="display: flex;align-items: center;">Velocidad <input type="range" id="speed" min="0" max="255" value="255" onchange="try{fetch(document.location.origin+'/control?var=speed&val='+this.value);}catch(e){}"></div>
+        </div>
+        <div class="cont_flex">  
+            <div style="display: flex;align-items: center;">Activar Luz <input type="range" id="flash" min="0" max="255" value="0" onchange="try{fetch(document.location.origin+'/control?var=flash&val='+this.value);}catch(e){}"></div>
+        </div>
+    <!--    <div class="cont_flex">  
             <div style="display: flex;align-items: center;">Servo <input type="range" id="servo" min="325" max="650" value="487" onchange="try{fetch(document.location.origin+'/control?var=servo&val='+this.value);}catch(e){}"></div>
-        </div>
-        <div class="cont_flex">  
-            <div style="display: flex;align-items: center;">Speed <input type="range" id="speed" min="0" max="255" value="255" onchange="try{fetch(document.location.origin+'/control?var=speed&val='+this.value);}catch(e){}"></div>
-        </div>
-        <div class="cont_flex">  
-            <div style="display: flex;align-items: center;">Flash <input type="range" id="flash" min="0" max="255" value="0" onchange="try{fetch(document.location.origin+'/control?var=flash&val='+this.value);}catch(e){}"></div>
-        </div>
+        </div> 
         <div class="cont_flex">  
             <div style="display: flex;align-items: center;">Quali. <input type="range" id="quality" min="10" max="63" value="10" onchange="try{fetch(document.location.origin+'/control?var=quality&val='+this.value);}catch(e){}"></div>
         </div>
         <div class="cont_flex">  
-            <div style="display: flex;align-items: center;">Resol. <input type="range" id="framesize" min="0" max="6" value="5" onchange="try{fetch(document.location.origin+'/control?var=framesize&val='+this.value);}catch(e){}"></div>
-        </div>
+            <div style="display: flex;align-items: center;">Resol. <input type="range" id="framesize" min="0" max="6" value="3" onchange="try{fetch(document.location.origin+'/control?var=framesize&val='+this.value);}catch(e){}"></div>
+        </div>-->
+        
 
         <script>
             window.onload = function(){
-                var canvas = document.getElementById("canvas");
-                var ctx = canvas.getContext("2d");
 
-                ctx.fillStyle = "rgb(255,0,0)";
-                ctx.fillRect(73,25,60,35);
-                ctx.clearRect(78,30,50,25);
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext("2d");
 
-                ctx.fillRect(93,20,20,5);
-                ctx.fillRect(68,35,5,15);
-                ctx.fillRect(133,35,5,15);
+            // Coordenadas base para el robot (aproximadamente el centro del canvas)
+            var centerX = canvas.width / 2;
+            var centerY = canvas.height / 2;
 
-                ctx.beginPath();
-                ctx.arc(92,42,6,0,2*Math.PI,true);
-                ctx.fill();
+            // --- Cuerpo del robot (cuadrado) ---
+            var bodyWidth = 80;
+            var bodyHeight = 80;
+            var bodyX = centerX - (bodyWidth / 2);
+            var bodyY = centerY - (bodyHeight / 2) - 10; // Un poco más arriba para la cabeza
 
-                ctx.beginPath();
-                ctx.arc(117,42,6,0,2*Math.PI,true);
-                ctx.fill();
+            ctx.fillStyle = "rgb(255, 102, 0)"; // Azul para el cuerpo
+            ctx.fillRect(bodyX, bodyY, bodyWidth, bodyHeight);
 
-                ctx.beginPath();
-                ctx.arc(104,100,35,0,Math.PI,true);
-                ctx.fill();
+            // Detalles en el cuerpo (un rectángulo interior para simular una pantalla o panel)
+            ctx.fillStyle = "rgb(255, 164, 32)"; // Un azul más claro
+            ctx.fillRect(bodyX + 10, bodyY + 10, bodyWidth - 20, bodyHeight - 20);
 
-                ctx.clearRect(50,85,100,20);
+            // --- Ruedas (rectangulares y pegadas a los laterales) ---
+            var wheelWidth = 10;
+            var wheelHeight = 40;
+
+            // Rueda Izquierda
+            var leftWheelX = bodyX - wheelWidth; // Pegada al lateral izquierdo del cuerpo
+            var leftWheelY = bodyY + (bodyHeight / 2) - (wheelHeight / 2);
+            ctx.fillStyle = "rgb(50, 50, 50)"; // Gris oscuro para las ruedas
+            ctx.fillRect(leftWheelX, leftWheelY+30, wheelWidth, wheelHeight);
+
+            // Rueda Derecha
+            var rightWheelX = bodyX + bodyWidth; // Pegada al lateral derecho del cuerpo
+            var rightWheelY = bodyY + (bodyHeight / 2) - (wheelHeight / 2);
+            ctx.fillStyle = "rgb(50, 50, 50)"; // Gris oscuro para las ruedas
+            ctx.fillRect(rightWheelX, rightWheelY+30, wheelWidth, wheelHeight);
+
+            // --- Ojos ---
+            var eyeRadius = 6;
+            ctx.fillStyle = "rgb(255,0,0)"; // Rojo para los ojos
+
+            // Ojo izquierdo
+            ctx.beginPath();
+            ctx.arc(bodyX + (bodyWidth * 0.3), bodyY + (bodyHeight * 0.3), eyeRadius, 0, 2 * Math.PI, true);
+            ctx.fill();
+
+            // Ojo derecho
+            ctx.beginPath();
+            ctx.arc(bodyX + (bodyWidth * 0.7), bodyY + (bodyHeight * 0.3), eyeRadius, 0, 2 * Math.PI, true);
+            ctx.fill();
+
+            // --- Sonrisa (una línea simple) ---
+            ctx.strokeStyle = "rgb(0, 0, 0)"; // Negro para la sonrisa
+            ctx.lineWidth = 2; // Grosor de la línea
+            ctx.beginPath();
+            ctx.arc(centerX, bodyY + (bodyHeight * 0.5), 20, 0, Math.PI, false); // Arco para la sonrisa
+            ctx.stroke();
+
+            // --- Antena (se mantiene como antes) ---
+            ctx.fillStyle = "rgb(200, 200, 200)"; // Gris claro para la antena
+            ctx.fillRect(centerX - 2.5, bodyY - 20, 5, 20); // Base de la antena
+            ctx.beginPath();
+            ctx.arc(centerX, bodyY - 20, 5, 0, 2 * Math.PI, true); // Punta de la antena
+            ctx.fill();
 
             }
         
